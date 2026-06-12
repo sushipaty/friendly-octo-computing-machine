@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SushiPaty — Restaurante Japonês</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:       #0d0d0d;
+    --paper:     #f7f3ee;
+    --ivory:     #faf7f2;
+    --red:       #8b1a1a;
+    --red-light: #b52b2b;
+    --gold:      #c49a3c;
+    --gold-pale: #e8d5a0;
+    --sepia:     #6b4f3a;
+    --smoke:     #2a2220;
+    --divider:   rgba(196,154,60,0.35);
+    --font-display: 'Cormorant Garamond', 'Noto Serif JP', serif;
+    --font-body:    'Lato', sans-serif;
+    --font-jp:      'Noto Serif JP', serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-body);
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── ORNAMENTAL SVG PATTERNS ─────────────────────────────── */
+  .kamon-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2.5rem auto;
+    max-width: 320px;
+  }
+  .kamon-divider::before,
+  .kamon-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--divider);
+  }
+  .kamon-divider svg { flex-shrink: 0; }
+
+  /* ─── HERO / BANNER ────────────────────────────────────────── */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem 5rem;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 0%, #1a0a08 0%, #0d0d0d 70%);
+  }
+
+  /* Ink-wash background texture */
+  #hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Ccircle cx='300' cy='300' r='290' fill='none' stroke='rgba(139,26,26,0.04)' stroke-width='60'/%3E%3Ccircle cx='300' cy='300' r='200' fill='none' stroke='rgba(139,26,26,0.03)' stroke-width='40'/%3E%3Ccircle cx='300' cy='300' r='110' fill='none' stroke='rgba(139,26,26,0.025)' stroke-width='20'/%3E%3C/svg%3E") center/700px repeat;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  /* Vertical kanji watermark */
+  #hero::after {
+    content: '寿司';
+    position: absolute;
+    right: 4vw;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-jp);
+    font-size: clamp(6rem, 14vw, 11rem);
+    writing-mode: vertical-rl;
+    color: rgba(196,154,60,0.06);
+    letter-spacing: 0.15em;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .hero-logo {
+    position: relative;
+    width: clamp(180px, 40vw, 320px);
+    margin-bottom: 2.5rem;
+    filter: drop-shadow(0 0 40px rgba(139,26,26,0.4));
+    animation: fadeDown 1.2s ease both;
+  }
+
+  .hero-tagline {
+    position: relative;
+    font-family: var(--font-display);
+    font-size: clamp(0.95rem, 2vw, 1.2rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--gold-pale);
+    max-width: 620px;
+    line-height: 1.9;
+    letter-spacing: 0.02em;
+    animation: fadeUp 1.4s 0.3s ease both;
+  }
+
+  .hero-tagline em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.5;
+    animation: bob 2s ease-in-out infinite;
+  }
+  .scroll-hint span {
+    font-family: var(--font-jp);
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .scroll-hint svg { opacity: 0.7; }
+
+  @keyframes fadeDown { from { opacity:0; transform: translateY(-24px); } to { opacity:1; transform: none; } }
+  @keyframes fadeUp   { from { opacity:0; transform: translateY(24px);  } to { opacity:1; transform: none; } }
+  @keyframes bob { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+  /* ─── SECTION COMMON ───────────────────────────────────────── */
+  section {
+    padding: 5rem 2rem;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-align: center;
+    color: var(--gold);
+  }
+  .section-title span { font-style: italic; color: var(--paper); }
+
+  /* ─── CHEF'S SUGGESTIONS ───────────────────────────────────── */
+  #sugestoes {
+    background: #0f0b09;
+    position: relative;
+    overflow: hidden;
+    padding: 5rem 0;
+  }
+
+  #sugestoes::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='80' height='80' fill='none'/%3E%3Ccircle cx='40' cy='40' r='38' fill='none' stroke='rgba(196,154,60,0.04)' stroke-width='1'/%3E%3Cline x1='40' y1='2' x2='40' y2='78' stroke='rgba(196,154,60,0.03)' stroke-width='0.5'/%3E%3Cline x1='2' y1='40' x2='78' y2='40' stroke='rgba(196,154,60,0.03)' stroke-width='0.5'/%3E%3C/svg%3E") 0/80px repeat;
+    pointer-events: none;
+  }
+
+  .sugestoes-header {
+    text-align: center;
+    padding: 0 2rem 3rem;
+    position: relative;
+  }
+
+  .sugestoes-label {
+    font-family: var(--font-jp);
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--red-light);
+    margin-bottom: 0.6rem;
+  }
+
+  /* Carousel */
+  .carousel-outer {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .carousel-track {
+    display: flex;
+    gap: 2rem;
+    padding: 1rem 3rem 2rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    cursor: grab;
+  }
+  .carousel-track:active { cursor: grabbing; }
+  .carousel-track::-webkit-scrollbar { display: none; }
+
+  .chef-card {
+    flex: 0 0 clamp(280px, 38vw, 420px);
+    scroll-snap-align: start;
+    background: linear-gradient(145deg, #1a1210, #120e0c);
+    border: 1px solid rgba(196,154,60,0.2);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .chef-card:hover {
+    transform: translateY(-6px) scale(1.015);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 0 1px rgba(196,154,60,0.35);
+  }
+
+  .chef-card-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: var(--red);
+    color: #fff;
+    font-size: 0.6rem;
+    font-family: var(--font-jp);
+    letter-spacing: 0.25em;
+    padding: 0.25rem 0.6rem;
+    text-transform: uppercase;
+    z-index: 2;
+  }
+
+  .chef-card-img {
+    width: 100%;
+    height: 230px;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.88) saturate(1.1);
+    transition: filter 0.4s ease;
+  }
+  .chef-card:hover .chef-card-img { filter: brightness(1) saturate(1.2); }
+
+  .chef-card-body {
+    padding: 1.5rem 1.6rem 1.8rem;
+    border-top: 1px solid var(--divider);
+  }
+
+  .chef-card-name {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--paper);
+    margin-bottom: 0.4rem;
+    line-height: 1.2;
+  }
+
+  .chef-card-price {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .chef-card-desc {
+    font-size: 0.82rem;
+    color: rgba(247,243,238,0.65);
+    line-height: 1.7;
+  }
+
+  .carousel-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
+  }
+  .carousel-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(196,154,60,0.3);
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+    padding: 0;
+  }
+  .carousel-dot.active {
+    background: var(--gold);
+    transform: scale(1.4);
+  }
+
+  .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(139,26,26,0.7);
+    border: 1px solid rgba(196,154,60,0.3);
+    color: var(--gold);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background 0.25s;
+    backdrop-filter: blur(4px);
+  }
+  .carousel-arrow:hover { background: rgba(139,26,26,0.95); }
+  .carousel-arrow.prev { left: 0.8rem; }
+  .carousel-arrow.next { right: 0.8rem; }
+
+  /* ─── MENU / CARDÁPIO ──────────────────────────────────────── */
+  #cardapio {
+    background: var(--smoke);
+    position: relative;
+  }
+
+  #cardapio::before {
+    content: '板前';
+    position: absolute;
+    left: 3vw;
+    top: 4rem;
+    font-family: var(--font-jp);
+    font-size: clamp(5rem, 10vw, 8rem);
+    writing-mode: vertical-rl;
+    color: rgba(196,154,60,0.05);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .cardapio-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+
+  .cardapio-intro {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: rgba(247,243,238,0.5);
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    margin-top: 0.5rem;
+  }
+
+  /* Category tabs */
+  .cat-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 3rem;
+  }
+  .cat-tab {
+    background: transparent;
+    border: 1px solid rgba(196,154,60,0.25);
+    color: rgba(247,243,238,0.6);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.45rem 1.1rem;
+    cursor: pointer;
+    border-radius: 1px;
+    transition: all 0.25s;
+  }
+  .cat-tab:hover, .cat-tab.active {
+    background: rgba(196,154,60,0.12);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* Category section */
+  .cat-section {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  .cat-section.visible { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+  .cat-heading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .cat-heading-line { flex: 1; height: 1px; background: var(--divider); }
+  .cat-heading-text {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-style: italic;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  /* Menu grid */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Menu card */
+  .menu-card {
+    background: linear-gradient(160deg, #1c1715, #130f0d);
+    border: 1px solid rgba(196,154,60,0.12);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    cursor: default;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(196,154,60,0.28);
+    border-color: rgba(196,154,60,0.28);
+  }
+
+  .menu-card-img-wrap {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    position: relative;
+  }
+  .menu-card-img-wrap::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(to top, rgba(19,15,13,0.85), transparent);
+  }
+  .menu-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+    filter: brightness(0.9) saturate(1.05);
+  }
+  .menu-card:hover img { transform: scale(1.06); filter: brightness(1) saturate(1.15); }
+
+  .menu-card-body {
+    padding: 1.1rem 1.25rem 1.3rem;
+  }
+
+  .menu-card-name {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--paper);
+    margin-bottom: 0.3rem;
+    line-height: 1.25;
+  }
+
+  .menu-card-sub {
+    font-size: 0.75rem;
+    color: rgba(247,243,238,0.5);
+    margin-bottom: 0.6rem;
+    line-height: 1.5;
+  }
+
+  .menu-card-price {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: var(--gold);
+  }
+
+  /* ─── FOOTER ───────────────────────────────────────────────── */
+  footer {
+    background: #080605;
+    text-align: center;
+    padding: 4rem 2rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  footer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 80%; height: 1px;
+    background: linear-gradient(to right, transparent, var(--divider), transparent);
+  }
+
+  .footer-logo {
+    width: clamp(130px, 28vw, 200px);
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 0 20px rgba(139,26,26,0.25));
+  }
+
+  .footer-cta {
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 3vw, 1.7rem);
+    font-style: italic;
+    color: var(--gold-pale);
+    margin-bottom: 2.5rem;
+    line-height: 1.4;
+  }
+
+  .footer-delivery-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(247,243,238,0.35);
+    margin-bottom: 1.2rem;
+    font-family: var(--font-jp);
+  }
+
+  .delivery-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+
+  .delivery-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+  .delivery-link:hover { transform: translateY(-4px); filter: brightness(1.15); }
+
+  .delivery-link-logo {
+    height: 52px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+
+  .delivery-link span {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(247,243,238,0.45);
+  }
+
+  .footer-copy {
+    font-size: 0.72rem;
+    color: rgba(247,243,238,0.25);
+    letter-spacing: 0.04em;
+    line-height: 1.8;
+    border-top: 1px solid rgba(196,154,60,0.08);
+    padding-top: 1.5rem;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* ─── UTILITY ──────────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .carousel-arrow { display: none; }
+    .menu-grid { grid-template-columns: 1fr; }
+    .cat-tabs { gap: 0.4rem; }
+    .cat-tab { font-size: 0.68rem; padding: 0.4rem 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════════════ -->
+<section id="hero">
+  <img class="hero-logo"
+       src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 420'%3E%3Cdefs%3E%3CradialGradient id='rg' cx='50%25' cy='40%25' r='55%25'%3E%3Cstop offset='0%25' stop-color='%238b1a1a'/%3E%3Cstop offset='100%25' stop-color='%235a0a0a'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cellipse cx='200' cy='155' rx='115' ry='115' fill='url(%23rg)' opacity='.12'/%3E%3C!-- crescent --%3E%3Cpath d='M200 55 a90 90 0 0 1 0 180 a60 60 0 0 0 0-180z' fill='%238b1a1a'/%3E%3C!-- fish silhouette --%3E%3Cellipse cx='205' cy='148' rx='52' ry='28' fill='%23b52b2b' transform='rotate(-20,205,148)'/%3E%3Cpolygon points='250,120 270,100 265,135' fill='%23b52b2b'/%3E%3Ccircle cx='190' cy='138' r='5' fill='%230d0d0d'/%3E%3C!-- text SushiPaty --%3E%3Ctext x='200' y='295' text-anchor='middle' font-family='Georgia,serif' font-size='62' font-style='italic' fill='white' letter-spacing='-1'%3ESushiPaty%3C/text%3E%3Ctext x='200' y='338' text-anchor='middle' font-family='Georgia,serif' font-size='16' fill='%238b1a1a' letter-spacing='6'%3ERESTAURANTE JAPONÊS%3C/text%3E%3Cline x1='100' y1='360' x2='300' y2='360' stroke='white' stroke-width='1.5' opacity='.5'/%3E%3Cline x1='102' y1='367' x2='298' y2='367' stroke='white' stroke-width='1.5' opacity='.5'/%3E%3C/svg%3E"
+       alt="SushiPaty — Restaurante Japonês"
+  />
+
+  <p class="hero-tagline">
+    Recentes no mercado da culinária japonesa, nossos pedidos são preparados com o mais
+    seleto dos ingredientes orientais, primando pela <em>salubridade</em> e pelo carinho
+    em cada etapa do preparo. Em nossa loja virtual, nossos clientes desfrutam do que há
+    de melhor na cozinha <em>nipo-brasileira</em>.
+  </p>
+
+  <div class="scroll-hint">
+    <span>Explorar</span>
+    <svg width="18" height="28" viewBox="0 0 18 28" fill="none">
+      <rect x="1" y="1" width="16" height="26" rx="8" stroke="rgba(196,154,60,.6)" stroke-width="1.5"/>
+      <rect x="7.5" y="6" width="3" height="6" rx="1.5" fill="rgba(196,154,60,.7)">
+        <animate attributeName="y" values="6;13;6" dur="1.8s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0.2;1" dur="1.8s" repeatCount="indefinite"/>
+      </rect>
+    </svg>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     SUGESTÕES DO CHEF
+════════════════════════════════════════════════════════════ -->
+<section id="sugestoes">
+  <div class="sugestoes-header">
+    <p class="sugestoes-label">Seleção especial</p>
+    <h2 class="section-title">Sugestões <span>do Chef</span></h2>
+    <div class="kamon-divider">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <circle cx="14" cy="14" r="12" stroke="rgba(196,154,60,0.5)" stroke-width="1"/>
+        <circle cx="14" cy="14" r="4" fill="rgba(196,154,60,0.5)"/>
+        <line x1="14" y1="2" x2="14" y2="26" stroke="rgba(196,154,60,0.25)" stroke-width="0.8"/>
+        <line x1="2" y1="14" x2="26" y2="14" stroke="rgba(196,154,60,0.25)" stroke-width="0.8"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="carousel-outer">
+    <button class="carousel-arrow prev" onclick="carouselMove(-1)" aria-label="Anterior">&#8592;</button>
+    <button class="carousel-arrow next" onclick="carouselMove(1)" aria-label="Próximo">&#8594;</button>
+
+    <div class="carousel-track" id="chefCarousel">
+
+      <!-- Card 1: Hot Tartar de Salmão -->
+      <div class="chef-card">
+        <span class="chef-card-badge">Destaque</span>
+        <img class="chef-card-img"
+             src="https://images.unsplash.com/photo-1617196034183-421b4040d8d9?w=600&q=80&fit=crop"
+             alt="8 unidades de Hot Tartar de Salmão"
+             loading="lazy">
+        <div class="chef-card-body">
+          <p class="chef-card-name">8 un. de Hot Tartar de Salmão</p>
+          <p class="chef-card-price">R$ 30,90</p>
+          <p class="chef-card-desc">Empanados e crocantes por fora, finalizados com topping de cream cheese, salmão, geleia de pimenta, cebolinha e molho teriyaki. Uma combinação intensa de textura e sabor.</p>
+        </div>
+      </div>
+
+      <!-- Card 2: Combo Especial do Chef 30 peças -->
+      <div class="chef-card">
+        <span class="chef-card-badge">Chef Recomenda</span>
+        <img class="chef-card-img"
+             src="https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=600&q=80&fit=crop"
+             alt="Combo Especial do Chef 30 peças"
+             loading="lazy">
+        <div class="chef-card-body">
+          <p class="chef-card-name">Combo Especial do Chef (30 peças)</p>
+          <p class="chef-card-price">R$ 48,90</p>
+          <p class="chef-card-desc">Uma composição harmoniosa e cuidadosamente selecionada, reunindo niguiris de textura sedosa, hot rolls dourados e crocantes, uramakis envoltos em arroz temperado e hossomakis de perfeita precisão — uma experiência gastronômica completa em uma única bandeja.</p>
+        </div>
+      </div>
+
+      <!-- Card 3: Combinado Só Hot's 12 peças -->
+      <div class="chef-card">
+        <span class="chef-card-badge">Popular</span>
+        <img class="chef-card-img"
+             src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=600&q=80&fit=crop"
+             alt="Combinado Só Hot's 12 peças"
+             loading="lazy">
+        <div class="chef-card-body">
+          <p class="chef-card-name">Combinado Só Hot's (12 peças)</p>
+          <p class="chef-card-price">R$ 39,90</p>
+          <p class="chef-card-desc">Somente peças quentes e crocantes, perfeito para quem aprecia o sushi mais intenso: 6 hot rolls de salmão, 3 hot crispys de couve e 3 hot crispys com alho-poró. Bem servido e repleto de sabor.</p>
+        </div>
+      </div>
+
+      <!-- Card 4: Big Hot de Salmão -->
+      <div class="chef-card">
+        <span class="chef-card-badge">Exclusivo</span>
+        <img class="chef-card-img"
+             src="https://images.unsplash.com/photo-1617196034871-3cbad1e93523?w=600&q=80&fit=crop"
+             alt="Big Hot de Salmão"
+             loading="lazy">
+        <div class="chef-card-body">
+          <p class="chef-card-name">Big Hot de Salmão</p>
+          <p class="chef-card-price">R$ 38,90</p>
+          <p class="chef-card-desc">Delicioso hot roll aberto ao meio, recheado com salmão em cubos, crispy à escolha do cliente, cream cheese, cebolinha e geleia de pimenta com tarê.</p>
+        </div>
+      </div>
+
+    </div><!-- /carousel-track -->
+  </div><!-- /carousel-outer -->
+
+  <div class="carousel-nav" id="chefDots"></div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     CARDÁPIO
+════════════════════════════════════════════════════════════ -->
+<section id="cardapio">
+  <div class="cardapio-header">
+    <h2 class="section-title">Card<span>ápio</span></h2>
+    <p class="cardapio-intro">Culinária nipo-brasileira — preparada com excelência</p>
+    <div class="kamon-divider">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <circle cx="14" cy="14" r="12" stroke="rgba(196,154,60,0.5)" stroke-width="1"/>
+        <circle cx="14" cy="14" r="4" fill="rgba(196,154,60,0.5)"/>
+        <line x1="14" y1="2" x2="14" y2="26" stroke="rgba(196,154,60,0.25)" stroke-width="0.8"/>
+        <line x1="2" y1="14" x2="26" y2="14" stroke="rgba(196,154,60,0.25)" stroke-width="0.8"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Category Tabs -->
+  <div class="cat-tabs">
+    <button class="cat-tab active" onclick="showCat('desejados', this)">Os Mais Desejados</button>
+    <button class="cat-tab" onclick="showCat('comb12', this)">Combinados 12 Peças</button>
+    <button class="cat-tab" onclick="showCat('comb36', this)">Combinados 36 Peças</button>
+    <button class="cat-tab" onclick="showCat('temakis', this)">Temakis</button>
+    <button class="cat-tab" onclick="showCat('unidade', this)">Peças à Unidade</button>
+  </div>
+
+  <!-- ── OS MAIS DESEJADOS ── -->
+  <div class="cat-section visible" id="cat-desejados">
+    <div class="cat-heading">
+      <div class="cat-heading-line"></div>
+      <span class="cat-heading-text">Os mais desejados!</span>
+      <div class="cat-heading-line"></div>
+    </div>
+    <div class="menu-grid">
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1617196034183-421b4040d8d9?w=500&q=80&fit=crop"
+               alt="8 un. de Hot Tartar de Salmão" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">8 un. de Hot Tartar de Salmão</p>
+          <p class="menu-card-sub">Empanados e crocantes, com topping de cream cheese, salmão, geleia de pimenta, cebolinha e molho teriyaki.</p>
+          <p class="menu-card-price">R$ 30,90</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1617196034871-3cbad1e93523?w=500&q=80&fit=crop"
+               alt="Big Hot de Salmão" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Big Hot de Salmão</p>
+          <p class="menu-card-sub">Hot roll aberto ao meio com salmão em cubos, crispy, cream cheese, cebolinha e geleia de pimenta com tarê.</p>
+          <p class="menu-card-price">R$ 38,90</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=500&q=80&fit=crop"
+               alt="Combo Especial do Chef 30 peças" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Combo Especial do Chef (30 peças)</p>
+          <p class="menu-card-sub">Niguiris, hot rolls, uramakis e hossomakis em uma composição harmoniosa e cuidadosamente selecionada pelo chef.</p>
+          <p class="menu-card-price">R$ 48,90</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── COMBINADOS 12 PEÇAS ── -->
+  <div class="cat-section" id="cat-comb12">
+    <div class="cat-heading">
+      <div class="cat-heading-line"></div>
+      <span class="cat-heading-text">Combinados — 12 Peças</span>
+      <div class="cat-heading-line"></div>
+    </div>
+    <div class="menu-grid">
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1617196034227-c73e55b67680?w=500&q=80&fit=crop"
+               alt="Combinado Variado 12 peças" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Combinado Variado (12 peças)</p>
+          <p class="menu-card-sub">Mix com sabores marcantes: 2 uramakis de pimenta biquinho, 2 uramakis filadélfia, 2 hot rolls de salmão, 2 hot rolls crispy, 2 uramakis skin e 2 niguiris de skin. Ideal para quem deseja provar um pouco de tudo.</p>
+          <p class="menu-card-price">R$ 44,90</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=500&q=80&fit=crop"
+               alt="Combinado Só Hot's 12 peças" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Combinado Só Hot's (12 peças)</p>
+          <p class="menu-card-sub">Somente peças quentes e crocantes: 6 hot rolls de salmão, 3 hot crispys de couve e 3 hot crispys com alho-poró.</p>
+          <p class="menu-card-price">R$ 39,90</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── COMBINADOS 36 PEÇAS ── -->
+  <div class="cat-section" id="cat-comb36">
+    <div class="cat-heading">
+      <div class="cat-heading-line"></div>
+      <span class="cat-heading-text">Combinados — 36 Peças</span>
+      <div class="cat-heading-line"></div>
+    </div>
+    <div class="menu-grid">
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1617196034842-d90a88ed5e2d?w=500&q=80&fit=crop"
+               alt="Combinado Clássico 36 peças" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Combinado Clássico (36 peças)</p>
+          <p class="menu-card-sub">Seleção completa dos tradicionais: 6 uramakis califórnia, 6 hossomakis de pepino, 6 hossomakis de salmão, 6 uramakis filadélfia, 6 uramakis skin e 6 hot rolls de salmão. Ideal para compartilhar.</p>
+          <p class="menu-card-price">R$ 74,90</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=500&q=80&fit=crop"
+               alt="Combinado Variado 36 peças" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Combinado Variado (36 peças)</p>
+          <p class="menu-card-sub">Mix com peças frescas e quentes: 6 uramakis filadélfia, 6 hossomakis de salmão grelhado, 6 uramakis skin, 3 uramakis crispy, 6 hossomakis de salmão, 3 niguiris de salmão e 6 hot rolls de salmão.</p>
+          <p class="menu-card-price">R$ 79,90</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1617196034183-421b4040d8d9?w=500&q=80&fit=crop"
+               alt="Combinado Especial 36 peças" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Combinado Especial (36 peças)</p>
+          <p class="menu-card-sub">Seleção com peças diferenciadas: 4 niguiris de skin, 4 niguiris de salmão, 4 niguiris flambados, 4 hot rolls de salmão, 4 hot crispys com alho-poró, 4 hot crispys de couve, 4 jows de salmão, 4 jows crispy e 4 jows com molho especial.</p>
+          <p class="menu-card-price">R$ 109,90</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── TEMAKIS ── -->
+  <div class="cat-section" id="cat-temakis">
+    <div class="cat-heading">
+      <div class="cat-heading-line"></div>
+      <span class="cat-heading-text">Temakis</span>
+      <div class="cat-heading-line"></div>
+    </div>
+    <div class="menu-grid">
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1617196035154-f946d0445f29?w=500&q=80&fit=crop"
+               alt="Temaki Salmão Tradicional" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Temaki Salmão Tradicional</p>
+          <p class="menu-card-sub">Recheado com arroz e salmão fresco, finalizado com cream cheese, cebolinha e tarê. Combinação clássica, leve e equilibrada, perfeita para os apreciadores do sabor puro do salmão.</p>
+          <p class="menu-card-price">R$ 27,90</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=500&q=80&fit=crop"
+               alt="Temaki Hot Salmão" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Temaki Hot Salmão</p>
+          <p class="menu-card-sub">Recheado com arroz, salmão, cream cheese e cebolinha, empanado e levemente frito. Crocante por fora e cremoso por dentro, ideal para quem aprecia sabores mais intensos.</p>
+          <p class="menu-card-price">R$ 33,90</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PEÇAS À UNIDADE ── -->
+  <div class="cat-section" id="cat-unidade">
+    <div class="cat-heading">
+      <div class="cat-heading-line"></div>
+      <span class="cat-heading-text">Peças à Unidade</span>
+      <div class="cat-heading-line"></div>
+    </div>
+    <div class="menu-grid">
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1617196035154-f946d0445f29?w=500&q=80&fit=crop"
+               alt="Hossomaki Califórnia" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Hossomaki Califórnia</p>
+          <p class="menu-card-sub">1 unidade</p>
+          <p class="menu-card-price">R$ 1,80</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=500&q=80&fit=crop"
+               alt="Hossomaki de Salmão" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Hossomaki de Salmão</p>
+          <p class="menu-card-sub">1 unidade</p>
+          <p class="menu-card-price">R$ 2,50</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1617196034227-c73e55b67680?w=500&q=80&fit=crop"
+               alt="Uramaki Califórnia" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Uramaki Califórnia</p>
+          <p class="menu-card-sub">1 unidade</p>
+          <p class="menu-card-price">R$ 1,80</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1617196034842-d90a88ed5e2d?w=500&q=80&fit=crop"
+               alt="Uramaki Skin" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Uramaki Skin</p>
+          <p class="menu-card-sub">1 unidade</p>
+          <p class="menu-card-price">R$ 2,00</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=500&q=80&fit=crop"
+               alt="Uramaki Filadélfia" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Uramaki Filadélfia</p>
+          <p class="menu-card-sub">1 unidade</p>
+          <p class="menu-card-price">R$ 3,00</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1617196035154-f946d0445f29?w=500&q=80&fit=crop"
+               alt="Niguiri de Salmão" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Niguiri de Salmão</p>
+          <p class="menu-card-sub">1 unidade</p>
+          <p class="menu-card-price">R$ 4,00</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=500&q=80&fit=crop"
+               alt="Niguiri Skin" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Niguiri Skin</p>
+          <p class="menu-card-sub">1 unidade</p>
+          <p class="menu-card-price">R$ 3,00</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1617196034871-3cbad1e93523?w=500&q=80&fit=crop"
+               alt="Joy de Salmão" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <p class="menu-card-name">Joy de Salmão</p>
+          <p class="menu-card-sub">1 unidade</p>
+          <p class="menu-card-price">R$ 4,00</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════ -->
+<footer>
+  <img class="footer-logo"
+       src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 420'%3E%3Cdefs%3E%3CradialGradient id='rg2' cx='50%25' cy='40%25' r='55%25'%3E%3Cstop offset='0%25' stop-color='%238b1a1a'/%3E%3Cstop offset='100%25' stop-color='%235a0a0a'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cellipse cx='200' cy='155' rx='115' ry='115' fill='url(%23rg2)' opacity='.12'/%3E%3Cpath d='M200 55 a90 90 0 0 1 0 180 a60 60 0 0 0 0-180z' fill='%238b1a1a'/%3E%3Cellipse cx='205' cy='148' rx='52' ry='28' fill='%23b52b2b' transform='rotate(-20,205,148)'/%3E%3Cpolygon points='250,120 270,100 265,135' fill='%23b52b2b'/%3E%3Ccircle cx='190' cy='138' r='5' fill='%230d0d0d'/%3E%3Ctext x='200' y='295' text-anchor='middle' font-family='Georgia,serif' font-size='62' font-style='italic' fill='white' letter-spacing='-1'%3ESushiPaty%3C/text%3E%3Ctext x='200' y='338' text-anchor='middle' font-family='Georgia,serif' font-size='16' fill='%238b1a1a' letter-spacing='6'%3ERESTAURANTE JAPONÊS%3C/text%3E%3Cline x1='100' y1='360' x2='300' y2='360' stroke='white' stroke-width='1.5' opacity='.5'/%3E%3Cline x1='102' y1='367' x2='298' y2='367' stroke='white' stroke-width='1.5' opacity='.5'/%3E%3C/svg%3E"
+       alt="SushiPaty logo">
+
+  <p class="footer-cta">Peça conosco e aproveite a experiência!</p>
+
+  <p class="footer-delivery-label">Disponível nas plataformas</p>
+
+  <div class="delivery-links">
+    <!-- 99 Food -->
+    <a class="delivery-link"
+       href="https://oia.99app.com/dlp9/WXIZT4?area=BR"
+       target="_blank" rel="noopener noreferrer"
+       aria-label="Peça pelo 99 Food">
+      <svg width="120" height="52" viewBox="0 0 120 52" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="120" height="52" rx="10" fill="#FFD000"/>
+        <text x="60" y="20" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="18" font-weight="900" fill="#222">99</text>
+        <text x="60" y="39" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#222" letter-spacing="2">FOOD</text>
+      </svg>
+      <span>Pedir pelo 99 Food</span>
+    </a>
+
+    <!-- WhatsApp -->
+    <a class="delivery-link"
+       href="https://wa.me/553173394395"
+       target="_blank" rel="noopener noreferrer"
+       aria-label="Fale conosco pelo WhatsApp">
+      <svg width="120" height="52" viewBox="0 0 120 52" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="120" height="52" rx="10" fill="#25D366"/>
+        <text x="60" y="22" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="white" letter-spacing="1">PEÇA PELO</text>
+        <text x="60" y="40" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="16" font-weight="900" fill="white" letter-spacing="1">WhatsApp</text>
+      </svg>
+      <span>Pedir pelo WhatsApp</span>
+    </a>
+  </div>
+
+  <div class="footer-copy">
+    <p>&copy; 2025 SushiPaty Restaurante Japonês. Todos os direitos reservados.</p>
+    <p>Imagens meramente ilustrativas. Preços sujeitos a alteração sem aviso prévio.<br>
+    CNPJ cadastrado. Estabelecimento comprometido com a qualidade e a excelência.</p>
+  </div>
+</footer>
+
+<script>
+/* ── CAROUSEL ── */
+const track  = document.getElementById('chefCarousel');
+const dotsEl = document.getElementById('chefDots');
+const cards  = track.querySelectorAll('.chef-card');
+let dots = [];
+
+// Build dots
+cards.forEach((_, i) => {
+  const d = document.createElement('button');
+  d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+  d.setAttribute('aria-label', `Ir para item ${i + 1}`);
+  d.onclick = () => scrollToCard(i);
+  dotsEl.appendChild(d);
+  dots.push(d);
+});
+
+function scrollToCard(idx) {
+  const card = cards[idx];
+  track.scrollTo({ left: card.offsetLeft - track.offsetLeft - 32, behavior: 'smooth' });
+}
+
+function carouselMove(dir) {
+  const w = cards[0].offsetWidth + 32;
+  track.scrollBy({ left: dir * w, behavior: 'smooth' });
+}
+
+// Update active dot on scroll
+track.addEventListener('scroll', () => {
+  const mid = track.scrollLeft + track.clientWidth / 2;
+  let closest = 0, minDist = Infinity;
+  cards.forEach((c, i) => {
+    const cx = c.offsetLeft - track.offsetLeft + c.offsetWidth / 2;
+    const d = Math.abs(cx - mid);
+    if (d < minDist) { minDist = d; closest = i; }
+  });
+  dots.forEach((d, i) => d.classList.toggle('active', i === closest));
+});
+
+// Drag-to-scroll
+let isDown = false, startX, scrollLeft;
+track.addEventListener('mousedown', e => {
+  isDown = true; track.classList.add('dragging');
+  startX = e.pageX - track.offsetLeft;
+  scrollLeft = track.scrollLeft;
+});
+track.addEventListener('mouseleave', () => { isDown = false; });
+track.addEventListener('mouseup',    () => { isDown = false; });
+track.addEventListener('mousemove',  e => {
+  if (!isDown) return;
+  e.preventDefault();
+  track.scrollLeft = scrollLeft - (e.pageX - track.offsetLeft - startX);
+});
+
+/* ── CATEGORY TABS ── */
+function showCat(id, btn) {
+  document.querySelectorAll('.cat-section').forEach(s => s.classList.remove('visible'));
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('cat-' + id).classList.add('visible');
+  btn.classList.add('active');
+}
+
+/* ── INTERSECTION OBSERVER for cards ── */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.menu-card, .chef-card').forEach(card => {
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(20px)';
+  card.style.transition = 'opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease, border-color 0.3s ease';
+  observer.observe(card);
+});
+</script>
+</body>
+</html>
